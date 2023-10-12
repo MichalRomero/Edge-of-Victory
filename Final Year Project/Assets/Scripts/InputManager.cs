@@ -44,5 +44,5 @@ public class InputManager : MonoBehaviour
     private void OnDisable(){
         onFoot.Disable();
     }
-
+    //TESTING
 }
