@@ -10,7 +10,7 @@ public class InputManager : MonoBehaviour
 
     private PlayerMotor motor;
     private PlayerLook look;
-    // Start is called before the first frame update
+
     void Awake()
     {
         playerInput = new PlayerInput();
@@ -19,30 +19,30 @@ public class InputManager : MonoBehaviour
         motor = GetComponent<PlayerMotor>();
         look = GetComponent<PlayerLook>();
 
-        //subscribes jump fucntion to jump action, anytime onFoot.Jump is performed, use ctx to call motor.Jump() function
-        onFoot.Jump.performed += ctx => motor.Jump();
+        
+        onFoot.Jump.performed += ctx => motor.Jump(); // Subscribes jump fucntion to jump action, anytime onFoot. Jump is performed, use ctx to call motor.Jump() function.
+        onFoot.Crouch.performed += ctx => motor.Crouch();
+        onFoot.Sprint.performed += ctx => motor.Sprint();
     }
 
-    // Update is called once per frame
+    // Update is called once per frame.
     void FixedUpdate()
     {
-        //Tell the playermotor to move using the value ofrom movement action.
-        motor.ProcessMove(onFoot.Movement.ReadValue<Vector2>());
-        
+        // Tell the playermotor to move using the value from movement action.
+        motor.ProcessMove(onFoot.Movement.ReadValue<Vector2>()); 
+
     }
 
     private void LateUpdate(){
-        look.ProcessLook(onFoot.Look.ReadValue<Vector2>());
+        look.ProcessLook(onFoot.Look.ReadValue<Vector2>()); // Send camera look input to the PlayerLook.
     }
 
-    //Allows to enable action map
     private void OnEnable(){
-        onFoot.Enable();
+        onFoot.Enable(); // Enable the action map.
     }
 
-    //Allows to disable action map
     private void OnDisable(){
-        onFoot.Disable();
+        onFoot.Disable(); // Disable the action map.
     }
     //TESTING
 }
