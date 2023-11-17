@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Keypad : Interactable
+public class Button : Interactable
 {
     [SerializeField]
     private GameObject door;
@@ -11,13 +11,13 @@ public class Keypad : Interactable
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     // This function is where we will design my interaction using code.

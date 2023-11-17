@@ -4,83 +4,101 @@ using UnityEngine;
 
 public class PlayerMotor : MonoBehaviour
 {
-    private CharacterController controller; // Reference to the CharacterController component.
+    private CharacterController controller;
     private Vector3 playerVelocity;
     private bool isGrounded;
-    public float speed = 5f; // Player movement speed.
-    public float gravity = -9.8f; // Gravity force applied to the player.
-    public float jumpHeight = 3f; // Jump height.
-    private bool lerpCrouch;
-    private bool crouching;
-    private bool sprinting;
-    private float crouchTimer;
-    // Start is called before the first frame update
+    private float baseSpeed = 5f; // Base walking speed
+    private float crouchSpeed = 3f; // Reduced speed when crouching
+    private float sprintSpeed = 8f; // Increased speed when sprinting
+    private float gravity = -20f; // Gravitational force
+    private float jumpHeight = 2f; // Height the player can jump
+    private bool lerpCrouch; // Flag for crouch transition
+    private bool crouching; // Is player crouching?
+    private bool sprinting; // Is player sprinting?
+    private float crouchTimer; // Timer for crouch transition
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         isGrounded = controller.isGrounded;
-
-        if (lerpCrouch)
-        {
-            crouchTimer += Time.deltaTime;
-            float p = crouchTimer / 1;
-            p *= p;
-            if (crouching)
-                controller.height = Mathf.Lerp(controller.height, 1, p);
-            else
-                controller.height = Mathf.Lerp(controller.height, 2, p);
-
-            if (p > 1)
-            {
-                lerpCrouch = false;
-                crouchTimer = 0f;
-            }
-            
-        }
+        HandleCrouch();
     }
 
-    // Will recive inputs from InputManger.cs and apply them to our character controller.
-    public void ProcessMove(Vector2 input){
-        Vector3 moveDirection = Vector3.zero;
-        moveDirection.x = input.x;
+    public void ProcessMove(Vector2 input)
+    {
+        // Adjust speed based on player state
+        float currentSpeed = sprinting ? sprintSpeed : (crouching ? crouchSpeed : baseSpeed);
+        Vector3 moveDirection = transform.TransformDirection(new Vector3(input.x, 0, input.y)) * currentSpeed;
 
-        // Grabs the y component of the 2D vector and applying it to the z axis of our vector(vertical movement - forward backward movement).
-        moveDirection.z = input.y; // Apply input to the player's movement.
-        
-        controller.Move(transform.TransformDirection(moveDirection) * speed * Time.deltaTime);
-
-        // Apply a constant downwards force to our player.
-        playerVelocity.y += gravity * Time.deltaTime;
-        if (isGrounded && playerVelocity.y < 0){
+        // Handle gravity
+        if (isGrounded && playerVelocity.y < 0)
+        {
             playerVelocity.y = -2f;
         }
-        controller.Move(playerVelocity * Time.deltaTime); // Apply gravity and ensure the player stays grounded.
+        else
+        {
+            playerVelocity.y += gravity * Time.deltaTime;
+        }
+
+        // Apply movement and gravity
+        controller.Move((moveDirection + playerVelocity) * Time.deltaTime);
     }
 
-    public void Jump(){
-        if (isGrounded){
-            playerVelocity.y = Mathf.Sqrt(jumpHeight * -3.0f * gravity); // Perform a jump.
+    public void Jump()
+    {
+        if (isGrounded && !crouching) // Prevent jumping while crouching
+        {
+            playerVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+        }
+    }
+
+    private void HandleCrouch()
+    {
+        if (!lerpCrouch) return;
+
+        crouchTimer += Time.deltaTime;
+        float targetHeight = crouching ? 1f : 2f;
+        controller.height = Mathf.Lerp(controller.height, targetHeight, crouchTimer);
+
+        if (crouchTimer >= 1)
+        {
+            lerpCrouch = false;
+            crouchTimer = 0f;
         }
     }
 
     public void Crouch()
     {
-        crouching = !crouching;
+        // If sprinting, switch to crouch
+        if (sprinting)
+        {
+            sprinting = false;
+            crouching = true;
+        }
+        else
+        {
+            crouching = !crouching;
+        }
+
         crouchTimer = 0;
-        lerpCrouch = true; // Toggle crouching and initiate lerping for height adjustment.
+        lerpCrouch = true;
     }
 
     public void Sprint()
     {
-        sprinting = !sprinting;
-        if (sprinting)
-            speed = 8; // Increase speed when sprinting.
+        // If crouching, switch to sprint
+        if (crouching)
+        {
+            crouching = false;
+            sprinting = true;
+        }
         else
-            speed = 5;
+        {
+            sprinting = !sprinting;
+        }
     }
 }

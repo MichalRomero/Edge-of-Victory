@@ -12,12 +12,12 @@ public class PlayerUI : MonoBehaviour
     // Start is called before the first frame update.
     void Start()
     {
-        
+
     }
 
     // Public method that updates the prompt text on the player's UI.
-    public void UpdateText(string promptMessage)
+    public void TextUpdate(string pMessage)
     {
-        promptText.text = promptMessage; // Set the text of the 'promptText' UI element.
+        promptText.text = pMessage; // Set the text of the 'promptText' UI element.
     }
 }

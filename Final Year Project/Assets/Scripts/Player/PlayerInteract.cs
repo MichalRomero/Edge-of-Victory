@@ -7,7 +7,7 @@ public class PlayerInteract : MonoBehaviour
 {
     private Camera cam; // The player's camera component.
     [SerializeField]
-    private float distance = 3f; // The max distance from the player within which interactions are possible.
+    private float dist = 3f; // The max distance from the player within which interactions are possible.
     [SerializeField]
     private LayerMask mask; // Layer mask to filter objects the raycast can hit.
     private PlayerUI playerUI; // Reference to the PlayerUI to display prompts.
@@ -24,27 +24,30 @@ public class PlayerInteract : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Clear any existing text from the player's UI.
-        playerUI.UpdateText(string.Empty);
+        // Clear any existing text from the player's UI in a chained method call.
+        playerUI.TextUpdate(string.Empty);
+
+        // Declare a RaycastHit variable at the beginning for storing collision information.
+        RaycastHit hitInfo;
 
         // Create a ray originating from the camera and moving forward.
         Ray ray = new Ray(cam.transform.position, cam.transform.forward);
-        
-        // Debbug to show how long the ray is.
-        Debug.DrawRay(ray.origin, ray.direction * distance);
 
-        RaycastHit hitInfo; //Variable Declaration to store our collision information.
-        if (Physics.Raycast(ray, out hitInfo, distance, mask)) // Check if it hits anything within the specified distance and layer mask.
+        // Debug to show the ray length.
+        Debug.DrawRay(ray.origin, ray.direction * dist);
+
+        // Check if the ray hits anything within the specified distance and layer mask.
+        if (Physics.Raycast(ray, out hitInfo, dist, mask) && hitInfo.collider.TryGetComponent(out Interactable interactable))
         {
-            if (hitInfo.collider.GetComponent<Interactable>() != null)
+            // Update the UI text with the message from the interactable object.
+            playerUI.TextUpdate(interactable.pMessage);
+
+            // Check if the interact button is pressed and call the interact method.
+            if (inputManager.onFoot.Interact.triggered)
             {
-                Interactable interactable = hitInfo.collider.GetComponent<Interactable>();
-                playerUI.UpdateText(interactable.promptMessage); // Update the UI text
-                if (inputManager.onFoot.Interact.triggered) // If the interact button is pressed, call the interact method on the interactable.
-                {
-                    interactable.BaseInteract();
-                }
+                interactable.BaseInteract();
             }
         }
+
     }
 }

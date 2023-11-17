@@ -19,7 +19,7 @@ public class InputManager : MonoBehaviour
         motor = GetComponent<PlayerMotor>();
         look = GetComponent<PlayerLook>();
 
-        
+
         onFoot.Jump.performed += ctx => motor.Jump(); // Subscribes jump fucntion to jump action, anytime onFoot. Jump is performed, use ctx to call motor.Jump() function.
         onFoot.Crouch.performed += ctx => motor.Crouch();
         onFoot.Sprint.performed += ctx => motor.Sprint();
@@ -29,19 +29,22 @@ public class InputManager : MonoBehaviour
     void FixedUpdate()
     {
         // Tell the playermotor to move using the value from movement action.
-        motor.ProcessMove(onFoot.Movement.ReadValue<Vector2>()); 
+        motor.ProcessMove(onFoot.Movement.ReadValue<Vector2>());
 
     }
 
-    private void LateUpdate(){
+    private void LateUpdate()
+    {
         look.ProcessLook(onFoot.Look.ReadValue<Vector2>()); // Send camera look input to the PlayerLook.
     }
 
-    private void OnEnable(){
+    private void OnEnable()
+    {
         onFoot.Enable(); // Enable the action map.
     }
 
-    private void OnDisable(){
+    private void OnDisable()
+    {
         onFoot.Disable(); // Disable the action map.
     }
     //TESTING

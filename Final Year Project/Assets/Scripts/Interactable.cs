@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class Interactable : MonoBehaviour
 {
     // Message displayed to player when looking at an interactable.
-    public string promptMessage;
+    public string pMessage;
 
     // This function will be called from the player.
     public void BaseInteract()
