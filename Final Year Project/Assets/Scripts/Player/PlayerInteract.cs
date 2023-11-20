@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerInteract : MonoBehaviour
 {
-    private Camera cam; // The player's camera component.
+    public Camera cam; // The player's camera component.
     [SerializeField]
     private float dist = 3f; // The max distance from the player within which interactions are possible.
     [SerializeField]
@@ -19,6 +19,7 @@ public class PlayerInteract : MonoBehaviour
         cam = GetComponent<PlayerLook>().cam; // Get the Camera component from the PlayerLook script attached to the player.
         playerUI = GetComponent<PlayerUI>(); // Get the PlayerUI component attached to the player.
         inputManager = GetComponent<InputManager>(); // Get the InputManager component attached to the player.
+
     }
 
     // Update is called once per frame
@@ -50,4 +51,5 @@ public class PlayerInteract : MonoBehaviour
         }
 
     }
+
 }

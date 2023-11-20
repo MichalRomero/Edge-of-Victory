@@ -798,6 +798,45 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Main",
+            "id": "81464fe3-1a1c-4dfa-b7a3-a9eda4f47dc7",
+            "actions": [
+                {
+                    "name": "Attack",
+                    "type": "Button",
+                    "id": "7097a10b-f9b6-4d15-a734-d3ead774782b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "132d8c1b-69c9-412c-8e9c-fad89a9167e3",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ac8c7831-57b1-421c-8013-8e90328c8315",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []

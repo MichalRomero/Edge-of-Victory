@@ -820,6 +820,45 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Main"",
+            ""id"": ""81464fe3-1a1c-4dfa-b7a3-a9eda4f47dc7"",
+            ""actions"": [
+                {
+                    ""name"": ""Attack"",
+                    ""type"": ""Button"",
+                    ""id"": ""7097a10b-f9b6-4d15-a734-d3ead774782b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""132d8c1b-69c9-412c-8e9c-fad89a9167e3"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ac8c7831-57b1-421c-8013-8e90328c8315"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -844,6 +883,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_UI_RightClick = m_UI.FindAction("RightClick", throwIfNotFound: true);
         m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
+        // Main
+        m_Main = asset.FindActionMap("Main", throwIfNotFound: true);
+        m_Main_Attack = m_Main.FindAction("Attack", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1105,6 +1147,52 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         }
     }
     public UIActions @UI => new UIActions(this);
+
+    // Main
+    private readonly InputActionMap m_Main;
+    private List<IMainActions> m_MainActionsCallbackInterfaces = new List<IMainActions>();
+    private readonly InputAction m_Main_Attack;
+    public struct MainActions
+    {
+        private @PlayerInput m_Wrapper;
+        public MainActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Attack => m_Wrapper.m_Main_Attack;
+        public InputActionMap Get() { return m_Wrapper.m_Main; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(MainActions set) { return set.Get(); }
+        public void AddCallbacks(IMainActions instance)
+        {
+            if (instance == null || m_Wrapper.m_MainActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_MainActionsCallbackInterfaces.Add(instance);
+            @Attack.started += instance.OnAttack;
+            @Attack.performed += instance.OnAttack;
+            @Attack.canceled += instance.OnAttack;
+        }
+
+        private void UnregisterCallbacks(IMainActions instance)
+        {
+            @Attack.started -= instance.OnAttack;
+            @Attack.performed -= instance.OnAttack;
+            @Attack.canceled -= instance.OnAttack;
+        }
+
+        public void RemoveCallbacks(IMainActions instance)
+        {
+            if (m_Wrapper.m_MainActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IMainActions instance)
+        {
+            foreach (var item in m_Wrapper.m_MainActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_MainActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public MainActions @Main => new MainActions(this);
     public interface IOnFootActions
     {
         void OnMovement(InputAction.CallbackContext context);
@@ -1126,5 +1214,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnRightClick(InputAction.CallbackContext context);
         void OnTrackedDevicePosition(InputAction.CallbackContext context);
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
+    }
+    public interface IMainActions
+    {
+        void OnAttack(InputAction.CallbackContext context);
     }
 }
