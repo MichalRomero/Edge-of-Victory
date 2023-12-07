@@ -10,25 +10,16 @@ public class InputManager : MonoBehaviour
 {
     private PlayerInput playerInput;
     public PlayerInput.OnFootActions onFoot;
-    PlayerInput.MainActions input;//TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+    PlayerInput.MainActions input;
 
     private PlayerMotor motor;
     private PlayerLook look;
-
-  
-
-    void Update()
-    {
-
-        
-
-    }
 
     void Awake()
     {
         playerInput = new PlayerInput();
         onFoot = playerInput.OnFoot;
-        input = playerInput.Main; //TTTTTTTTTTTTTTTTTTTTTTT
+        input = playerInput.Main; 
 
         motor = GetComponent<PlayerMotor>();
         look = GetComponent<PlayerLook>();
@@ -38,7 +29,7 @@ public class InputManager : MonoBehaviour
         onFoot.Crouch.performed += ctx => motor.Crouch();
         onFoot.Sprint.performed += ctx => motor.Sprint();
 
-        input.Attack.started += ctx => motor.Attack();//TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+        input.Attack.started += ctx => motor.Attack(); // Similar to above but does not require player to be on foot.
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -59,14 +50,16 @@ public class InputManager : MonoBehaviour
 
     private void OnEnable()
     {
-        onFoot.Enable(); // Enable the action map.
-        input.Enable();//TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+        // Enable the action map.
+        onFoot.Enable(); 
+        input.Enable();
     }
 
     private void OnDisable()
     {
-        onFoot.Disable(); // Disable the action map.
-        input.Disable();//TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+        // Disable the action map.
+        onFoot.Disable(); 
+        input.Disable();
     }
-    //TESTING
+
 }

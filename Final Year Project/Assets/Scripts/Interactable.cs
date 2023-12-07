@@ -15,7 +15,7 @@ public abstract class Interactable : MonoBehaviour
 
     protected virtual void Interact()
     {
-        // Won't have any code written in this function.
-        // This is a template function to be overridden by our subclasses.
+        // This function will remain empty.
+        // This is a template function to be overridden by the subclasses.
     }
 }

@@ -23,7 +23,7 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(currentHealth);
+        Debug.Log("Enemy hp: " + currentHealth);
     }
 
     int currentHealth;
@@ -32,7 +32,6 @@ public class Enemy : MonoBehaviour
     void Awake()
     {
         currentHealth = maxHealth;
-        
     }
 
     public void TakeDamage(int amount)
@@ -47,7 +46,6 @@ public class Enemy : MonoBehaviour
     void Death()
     {
         // Death function
-        // TEMPORARY: Destroy Object
         Destroy(gameObject);
     }
 }

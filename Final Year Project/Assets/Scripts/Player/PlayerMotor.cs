@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -25,11 +27,15 @@ public class PlayerMotor : MonoBehaviour
     private bool sprinting; // Is player sprinting?
     private float crouchTimer; // Timer for crouch transition
 
+    
+
+
 
     void Start()
     {
         controller = GetComponent<CharacterController>(); 
         cam = GetComponent<PlayerLook>().cam;
+
     }
 
 
@@ -148,12 +154,10 @@ public class PlayerMotor : MonoBehaviour
 
         if (attackCount == 0)
         {
-            //ChangeAnimationState(ATTACK1);
             attackCount++;
         }
         else
         {
-            //ChangeAnimationState(ATTACK2);
             attackCount = 0;
         }
   
@@ -180,11 +184,6 @@ public class PlayerMotor : MonoBehaviour
 
     void HitTarget(Vector3 pos)
     {
-        //audioSource.pitch = 1;
-        //audioSource.PlayOneShot(hitSound);
-
-        //GameObject GO = Instantiate(hitEffect, pos, Quaternion.identity);
-        //Destroy(GO, 20);
 
         Debug.Log("hit target");
     }

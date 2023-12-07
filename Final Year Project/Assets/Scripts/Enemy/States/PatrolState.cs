@@ -20,23 +20,24 @@ public class PatrolState : BaseState
 
     public void PatrolCycle()
     {
-        //patrol logic
+        // Check if the enemy has reached its current waypoint
         if (enemy.Agent.remainingDistance < 0.2f)
         {
+            // Increment the timer to track waiting time
             waitTimer += Time.deltaTime;
+
+            // If the wait time exceeds 1 second, move to the next waypoint and reset the timer
             if (waitTimer > 1)
             {
                 if (waypointIndex < enemy.path.waypoints.Count - 1)
-                {
                     waypointIndex++;
-                }
                 else
-                {
                     waypointIndex = 0;
-                }
+
                 enemy.Agent.SetDestination(enemy.path.waypoints[waypointIndex].position);
-                waitTimer = 0;
+                waitTimer = 0; // Reset the wait timer
             }
         }
     }
+
 }
