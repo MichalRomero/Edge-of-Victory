@@ -2573,7 +2573,7 @@ GameObject:
   - component: {fileID: 1438731059}
   - component: {fileID: 1438731058}
   - component: {fileID: 1438731057}
-  m_Layer: 7
+  m_Layer: 2
   m_Name: R_eye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3448,6 +3448,7 @@ MonoBehaviour:
   path: {fileID: 2029580245}
   viewDistance: 20
   fov: 85
+  eyeHeight: 0.6
   maxHealth: 100
 --- !u!1 &1799001872
 GameObject:
@@ -3461,7 +3462,7 @@ GameObject:
   - component: {fileID: 1799001876}
   - component: {fileID: 1799001875}
   - component: {fileID: 1799001874}
-  m_Layer: 7
+  m_Layer: 2
   m_Name: R_eye (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

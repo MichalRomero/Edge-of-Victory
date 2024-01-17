@@ -15,6 +15,7 @@ public class Enemy : MonoBehaviour
     private GameObject player;
     public float viewDistance = 20f;
     public float fov = 85f;
+    public float eyeHeight;
     // Start is called before the first frame update
     void Start()
     {
@@ -46,19 +47,31 @@ public class Enemy : MonoBehaviour
     {
         if (player != null)
         {
-            // Is the player close enough to be soon?
+            // checking distance if player can be seen
             if (Vector3.Distance(transform.position, player.transform.position) < viewDistance)
             {
-                Vector3 targetDirection = player.transform.position - transform.position;
+                // Calculating angle to player
+                Vector3 targetDirection = player.transform.position - transform.position - (Vector3.up * eyeHeight);
                 float angleToPlayer = Vector3.Angle(targetDirection, transform.forward);
+                
+                // Check if angle is within FOV of enemy
                 if (angleToPlayer >= -fov && angleToPlayer <= fov)
                 {
-                    Ray ray = new Ray(transform.position, targetDirection);
-                    Debug.DrawRay(ray.origin, ray.direction * viewDistance);
+                    // Using raycast to check if line of sight is blocked by object
+                    Ray ray = new Ray(transform.position + (Vector3.up * eyeHeight), targetDirection);
+                    RaycastHit hitInfo = new RaycastHit();
+                    if(Physics.Raycast(ray,out hitInfo, viewDistance))
+                    {
+                        if(hitInfo.transform.gameObject == player)
+                        {
+                            Debug.DrawRay(ray.origin, ray.direction * viewDistance);
+                            return true;
+                        }
+                    }
                 }
             }
         }
-        return true;
+        return false;
     }
 
     public void TakeDamage(int amount)
