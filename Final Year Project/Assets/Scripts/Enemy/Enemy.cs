@@ -31,6 +31,7 @@ public class Enemy : MonoBehaviour
     {
         Debug.Log("Enemy hp: " + currentHealth);
         PlayerVisable();
+        currentState = stateMachine.activeState.ToString(); // Allows to see what state the enemy is currently in
     }
 
     int currentHealth;
