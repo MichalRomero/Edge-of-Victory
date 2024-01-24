@@ -1,13 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class AttackState : BaseState
 {
     private float moveTimer;
     private float losePlayerTimer;
 
+   
 
+    public void Awake()
+    {
+        
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
     public override void Enter()
     {
         
@@ -21,26 +34,18 @@ public class AttackState : BaseState
     public override void Perform()
     {
         // Checks if the enmy can see the player
-        if (enemy.PlayerVisable())
+        if (enemy.PlayerVisable() && !enemy.playerInAttackRange())
         {
-            // Increases timer and checks against random value between 3 - 7
-            losePlayerTimer = 0;
-            moveTimer += Time.deltaTime;
-            if(moveTimer > Random.Range(3, 7))
-            {
-                // Move enemy to random location & reset timer
-                enemy.Agent.SetDestination(enemy.transform.position + (Random.insideUnitSphere * 5));
-                moveTimer = 0;
-            }
+            enemy.Agent.SetDestination(enemy.player1.position);
+        }
+        else if (enemy.PlayerVisable() && enemy.playerInAttackRange())
+        {
+            enemy.Agent.SetDestination(enemy.transform.position);
+            enemy.transform.LookAt(enemy.player1);
         }
         else
         {
-            losePlayerTimer += Time.deltaTime;
-            if (losePlayerTimer > 8)
-            {
-                //Change to search state.
-                stateMachine.ChangeState(new PatrolState());
-            }
+            stateMachine.ChangeState(new PatrolState());
         }
     }
 
@@ -50,9 +55,5 @@ public class AttackState : BaseState
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
 }

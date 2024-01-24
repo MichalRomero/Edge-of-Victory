@@ -16,6 +16,11 @@ public class Enemy : MonoBehaviour
     public float viewDistance = 20f;
     public float fov = 85f;
     public float eyeHeight;
+
+    //Used in Attack state
+    public Transform player1;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,6 +37,9 @@ public class Enemy : MonoBehaviour
         Debug.Log("Enemy hp: " + currentHealth);
         PlayerVisable();
         currentState = stateMachine.activeState.ToString(); // Allows to see what state the enemy is currently in
+        
+        //EXPERIMENTAL
+        player1 = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     int currentHealth;
@@ -41,6 +49,23 @@ public class Enemy : MonoBehaviour
     {
         currentHealth = maxHealth;
     }
+
+
+
+    //Used for attack state
+
+    //public Vector3 plp ;
+    public float sightRange, attackRange;
+    public bool pAttackInRange;
+    public LayerMask whatIsGround, whatIsPlayer;
+    public bool playerInAttackRange()
+    {
+        pAttackInRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
+        return pAttackInRange;
+    }
+
+
+
 
 
     // Check if player is within range and within FOV of enemy
