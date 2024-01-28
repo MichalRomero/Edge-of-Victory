@@ -16,9 +16,15 @@ public class Enemy : MonoBehaviour
     public float viewDistance = 20f;
     public float fov = 85f;
     public float eyeHeight;
+    public GameObject Player { get => player; }
+    private Vector3 lastKnownPos;
+    // Having the getter allows access the private var of lastKnownPos, having the setter allows asigning new value to it.
+    public Vector3 LastKnownPos { get => lastKnownPos; set => lastKnownPos = value; }
 
     //Used in Attack state
     public Transform player1;
+
+    
 
 
     // Start is called before the first frame update
@@ -28,7 +34,9 @@ public class Enemy : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         stateMachine.Initialise();
         player = GameObject.FindGameObjectWithTag("Player");
-        
+
+       
+
     }
 
     // Update is called once per frame
@@ -114,4 +122,10 @@ public class Enemy : MonoBehaviour
         // Death function
         Destroy(gameObject);
     }
+
+
+
+
+
+    
 }
