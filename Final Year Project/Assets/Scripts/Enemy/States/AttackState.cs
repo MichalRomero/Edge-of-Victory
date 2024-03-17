@@ -12,11 +12,11 @@ public class AttackState : BaseState
     // Update is called once per frame
     void Update()
     {
-        
+        Perform();
     }
     public override void Enter()
     {
-        
+        attackTimer = 0; // Reset attack timer on entering the state
     }
 
     public override void Exit()
@@ -27,6 +27,9 @@ public class AttackState : BaseState
 
 
     private PlayerHP playerHP;
+
+    private float attackCooldown = 0.4f; // Cooldown time for attacks
+    private float attackTimer = 0;       // Timer to track attack cooldown
 
     public AttackState()
     {
@@ -40,18 +43,29 @@ public class AttackState : BaseState
 
     public override void Perform()
     {
-        // Checks if the enemy can see the player
+
+        attackTimer += Time.deltaTime; // Update attack timer
+
+
+
+        // Checks if the enemy can see the player but is not within attacking range
         if (enemy.PlayerVisable() && !enemy.playerInAttackRange())
         {
             enemy.Agent.SetDestination(enemy.player1.position);
             enemy.LastKnownPos = enemy.Player.transform.position;
         }
+        // Checks if the enemy can see the player and is within attacking range
         else if (enemy.PlayerVisable() && enemy.playerInAttackRange())
         {
             enemy.Agent.SetDestination(enemy.transform.position);
             enemy.transform.LookAt(enemy.player1);
 
-            playerHP.TakeDamage(1f);
+            // Check if attack cooldown has elapsed
+            if (attackTimer >= attackCooldown)
+            {
+                playerHP.TakeDamage(25f); // Deal 25 damage
+                attackTimer = 0; // Reset attack timer
+            }
         }
         else
         {

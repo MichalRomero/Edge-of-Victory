@@ -35,6 +35,7 @@ public class PlayerMotor : MonoBehaviour
     {
         controller = GetComponent<CharacterController>(); 
         cam = GetComponent<PlayerLook>().cam;
+        animator = GetComponentInChildren<Animator>(); ;
 
     }
 
@@ -48,7 +49,7 @@ public class PlayerMotor : MonoBehaviour
         //if (input.Attack.IsPressed())
         //{ Attack(); }
 
-
+        SetAnimations();
     }
 
     public void ProcessMove(Vector2 input)
@@ -152,12 +153,15 @@ public class PlayerMotor : MonoBehaviour
         Invoke(nameof(ResetAttack), attackSpeed);
         Invoke(nameof(AttackRaycast), attackDelay);
 
+
         if (attackCount == 0)
         {
+            ChangeAnimationState(ATTACK1);
             attackCount++;
         }
         else
         {
+            ChangeAnimationState(ATTACK2);
             attackCount = 0;
         }
   
@@ -182,10 +186,48 @@ public class PlayerMotor : MonoBehaviour
         }
     }
 
+
     void HitTarget(Vector3 pos)
     {
 
         Debug.Log("hit target");
     }
 
+
+
+
+
+
+
+    Animator animator;
+
+    public const string IDLE = "Idle";
+    public const string WALK = "Walk";
+    public const string ATTACK1 = "Attack 1";
+    public const string ATTACK2 = "Attack 2";
+
+    string currentAnimationState;
+
+    public void ChangeAnimationState(string newState)
+    {
+        Debug.Log("Changing animation state to: " + newState);
+        // STOP THE SAME ANIMATION FROM INTERRUPTING WITH ITSELF //
+        if (currentAnimationState == newState) return;
+
+        // PLAY THE ANIMATION //
+        currentAnimationState = newState;
+        animator.CrossFadeInFixedTime(currentAnimationState, 0.2f);
+    }
+
+    void SetAnimations()
+    {
+        // If player is not attacking
+        if (!attacking)
+        {
+            if (playerVelocity.x == 0 && playerVelocity.z == 0)
+            { ChangeAnimationState(IDLE); }
+            else
+            { ChangeAnimationState(WALK); }
+        }
+    }
 }
