@@ -7,7 +7,12 @@ public class AttackState : BaseState
 {
     private float moveTimer;
     private float losePlayerTimer;
-    
+
+
+    private bool isAttackDelayed = false;
+    private float delayAttackTimer = 0f;
+    private const float delayAttackTime = 0.4f; // Delay time in seconds
+
 
     // Update is called once per frame
     void Update()
@@ -28,7 +33,7 @@ public class AttackState : BaseState
 
     private PlayerHP playerHP;
 
-    private float attackCooldown = 0.4f; // Cooldown time for attacks
+    private float attackCooldown = 1f; // Cooldown time for attacks
     private float attackTimer = 0;       // Timer to track attack cooldown
 
     public AttackState()
@@ -46,7 +51,16 @@ public class AttackState : BaseState
 
         attackTimer += Time.deltaTime; // Update attack timer
 
-
+        // Handle attack delay
+        if (isAttackDelayed)
+        {
+            delayAttackTimer += Time.deltaTime;
+            if (delayAttackTimer >= delayAttackTime)
+            {
+                DelayedAttack();
+                isAttackDelayed = false;
+            }
+        }
 
         // Checks if the enemy can see the player but is not within attacking range
         if (enemy.PlayerVisable() && !enemy.playerInAttackRange())
@@ -63,7 +77,8 @@ public class AttackState : BaseState
             // Check if attack cooldown has elapsed
             if (attackTimer >= attackCooldown)
             {
-                playerHP.TakeDamage(25f); // Deal 25 damage
+                Attack();
+                Debug.Log("Enemy ATTACKED");
                 attackTimer = 0; // Reset attack timer
             }
         }
@@ -71,6 +86,22 @@ public class AttackState : BaseState
         {
             // Changes to search state
             stateMachine.ChangeState(new SearchState());
+        }
+    }
+
+
+    private void Attack()
+    {
+        isAttackDelayed = true;
+        delayAttackTimer = 0f;
+    }
+
+    private void DelayedAttack()
+    {
+        // Check if the player is still in attack range
+        if (enemy.PlayerVisable() && enemy.playerInAttackRange())
+        {
+            playerHP.TakeDamage(25f); // Apply damage
         }
     }
 
