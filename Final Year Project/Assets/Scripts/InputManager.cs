@@ -30,6 +30,7 @@ public class InputManager : MonoBehaviour
         onFoot.Sprint.performed += ctx => motor.Sprint();
 
         input.Attack.started += ctx => motor.Attack(); // Similar to above but does not require player to be on foot.
+        input.Block.started += ctx => motor.Block();
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;

@@ -230,4 +230,35 @@ public class PlayerMotor : MonoBehaviour
             { ChangeAnimationState(WALK); }
         }
     }
+
+
+
+    private bool isBlocking = false; // Flag to track if the player is currently blocking
+    private float blockDuration = 1f; // Duration of blocking in seconds
+
+    public bool IsBlocking => isBlocking; // Property to provide read-only access to isBlocking
+
+    public void Block()
+    {
+        if (!isBlocking)
+        {
+            // Start blocking
+            isBlocking = true;
+
+            // Trigger block animation if available
+            // ChangeAnimationState("Block"); // Assuming you have a block animation
+
+            // Invoke method to stop blocking after blockDuration
+            Invoke(nameof(StopBlocking), blockDuration);
+        }
+    }
+
+    private void StopBlocking()
+    {
+        // Stop blocking
+        isBlocking = false;
+
+        // If you have a block animation, return to idle or previous animation
+        // ChangeAnimationState("Idle"); // Assuming you have an idle animation
+    }
 }

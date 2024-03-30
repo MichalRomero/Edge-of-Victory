@@ -1168,7 +1168,7 @@ MonoBehaviour:
   player1: {fileID: 0}
   maxHealth: 100
   sightRange: 20
-  attackRange: 3
+  attackRange: 2
   pAttackInRange: 0
   whatIsGround:
     serializedVersion: 2

@@ -12,10 +12,13 @@ public class PlayerHP : MonoBehaviour
     public Image healthBar;
     public Image backHealthBar;
 
+    private PlayerMotor playerMotor;
+
     // Start is called before the first frame update
     void Start()
     {
         health = maxHealth; // Initialise health to max at start
+        playerMotor = GetComponent<PlayerMotor>();
     }
 
     // Update is called once per frame
@@ -70,8 +73,19 @@ public class PlayerHP : MonoBehaviour
     // Reduces player's health
     public void TakeDamage (float damage)
     {
-        health -= damage;
-        lerpTimer = 0f;
+        // Check if the player is blocking
+        if (playerMotor != null && playerMotor.IsBlocking)
+        {
+            Debug.Log("BLOCKED");
+            // Player is blocking, so don't apply damage
+            // Optionally, you can add a visual or audio effect here
+        }
+        else
+        {
+            // Player is not blocking, apply damage
+            health -= damage;
+            lerpTimer = 0f;
+        }
     }
 
     // Increases player's health

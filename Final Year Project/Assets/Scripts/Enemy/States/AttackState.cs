@@ -73,10 +73,13 @@ public class AttackState : BaseState
         // Checks if the enemy can see the player but is not within attacking range
         if (enemy.PlayerVisable() && !enemy.playerInAttackRange())
         {
-            enemy.Agent.SetDestination(enemy.player1.position);
-            enemy.LastKnownPos = enemy.Player.transform.position;
+            if (!isAttackDelayed) // Add this check
+            {
+                enemy.Agent.SetDestination(enemy.player1.position);
+                enemy.LastKnownPos = enemy.Player.transform.position;
 
-            ChangeAnimationState(EnemyWalk); // Trigger walking animation
+                ChangeAnimationState(EnemyWalk); // Trigger walking animation only if not in the middle of an attack
+            }
         }
         // Checks if the enemy can see the player and is within attacking range
         else if (enemy.PlayerVisable() && enemy.playerInAttackRange())
