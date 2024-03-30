@@ -201,6 +201,7 @@ public class PlayerMotor : MonoBehaviour
 
     Animator animator;
 
+    public const string Blocking = "Blocking";
     public const string IDLE = "Idle";
     public const string WALK = "Walk";
     public const string ATTACK1 = "Attack 1";
@@ -221,20 +222,27 @@ public class PlayerMotor : MonoBehaviour
 
     void SetAnimations()
     {
-        // If player is not attacking
+        // If player is blocking, return and do not change the animation
+        if (isBlocking) return;
+
+        // Existing code for handling other animations
         if (!attacking)
         {
             if (playerVelocity.x == 0 && playerVelocity.z == 0)
-            { ChangeAnimationState(IDLE); }
+            {
+                ChangeAnimationState(IDLE);
+            }
             else
-            { ChangeAnimationState(WALK); }
+            {
+                ChangeAnimationState(WALK);
+            }
         }
     }
 
 
 
     private bool isBlocking = false; // Flag to track if the player is currently blocking
-    private float blockDuration = 1f; // Duration of blocking in seconds
+    private float blockDuration = 0.5f; // Duration of blocking in seconds
 
     public bool IsBlocking => isBlocking; // Property to provide read-only access to isBlocking
 
@@ -246,7 +254,7 @@ public class PlayerMotor : MonoBehaviour
             isBlocking = true;
 
             // Trigger block animation if available
-            // ChangeAnimationState("Block"); // Assuming you have a block animation
+            ChangeAnimationState(Blocking); // Assuming you have a block animation
 
             // Invoke method to stop blocking after blockDuration
             Invoke(nameof(StopBlocking), blockDuration);
@@ -259,6 +267,6 @@ public class PlayerMotor : MonoBehaviour
         isBlocking = false;
 
         // If you have a block animation, return to idle or previous animation
-        // ChangeAnimationState("Idle"); // Assuming you have an idle animation
+        ChangeAnimationState(IDLE); // Assuming you have an idle animation
     }
 }
