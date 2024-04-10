@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ai
   - AiBody
+  - Doors
   layers:
   - Default
   - TransparentFX
