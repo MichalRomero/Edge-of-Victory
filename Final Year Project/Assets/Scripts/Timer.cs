@@ -10,12 +10,18 @@ public class Timer : MonoBehaviour
     private void Update()
     {
         elapsedTime += Time.deltaTime;
-        timerText.text = elapsedTime.ToString("F3"); // Format the time
+
+        // Calculate minutes, seconds, and milliseconds
+        int minutes = (int)(elapsedTime / 60);
+        int seconds = (int)(elapsedTime % 60);
+        int milliseconds = (int)((elapsedTime - (int)elapsedTime) * 1000);
+
+        // Format the string as 00:00:000
+        timerText.text = string.Format("{0:00}:{1:00}:{2:000}", minutes, seconds, milliseconds);
     }
 
     public void GameFinished()
     {
-        FinalTime = elapsedTime; // Save the time when game is finished
-        // Optional: Load the new scene here if needed
+        FinalTime = elapsedTime; // Save the time when the game is finished
     }
 }
