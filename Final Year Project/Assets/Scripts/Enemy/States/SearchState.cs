@@ -11,19 +11,14 @@ public class SearchState : BaseState
     public const string EnemyWalk = "EnemyWalk"; // Define your walking animation state name
     public const string EnemyIdle = "EnemyIdle"; // Define your idle animation state name
     private string currentAnimationState;
+
     public override void Enter()
-   {
+    {
         enemy.Agent.SetDestination(enemy.LastKnownPos);
         ChangeAnimationState(EnemyWalk);
-    }
 
-    public SearchState()
-    {
-        GameObject enemy = GameObject.FindGameObjectWithTag("AiBody"); 
-        if (enemy != null)
-        {
-            animator = enemy.GetComponent<Animator>();
-        }
+        // Access the Animator component from the enemy object
+        animator = enemy.GetComponent<Animator>();
     }
 
     public override void Perform()
@@ -35,11 +30,11 @@ public class SearchState : BaseState
             stateMachine.ChangeState(new AttackState());
         }
 
-        // Checks if arraived at players last known postition.
+        // Checks if arrived at players last known position.
         if (enemy.Agent.remainingDistance < enemy.Agent.stoppingDistance)
         {
             ChangeAnimationState(EnemyIdle);
-            // After 6 seconds and player not found, enemy will get back to patrol state.
+            // After 10 seconds and player not found, enemy will get back to patrol state.
             searchTimer += Time.deltaTime;
             moveTimer += Time.deltaTime;
             if (searchTimer > 10)
@@ -59,12 +54,19 @@ public class SearchState : BaseState
 
     public void ChangeAnimationState(string newState)
     {
+        if (animator == null)
+        {
+            //Debug.LogError("Animator not found on the enemy.");
+            return;
+        }
+
         Debug.Log("Changing animation state to: " + newState);
         if (currentAnimationState == newState) return;
 
         animator.CrossFadeInFixedTime(newState, 0.2f);
         currentAnimationState = newState;
     }
+
 
     private void ResetAnimationState()
     {
@@ -73,6 +75,6 @@ public class SearchState : BaseState
 
     public override void Exit()
     {
-
+        // Any cleanup when the state exits
     }
 }

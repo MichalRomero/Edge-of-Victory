@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PatrolState : BaseState
 {
-    //Used to track which waypoint currently targeting.
     public int waypointIndex;
     public float waitTimer;
 
@@ -12,17 +11,11 @@ public class PatrolState : BaseState
     public const string EnemyWalk = "EnemyWalk"; // Define your walking animation state name
     public const string EnemyIdle = "EnemyIdle"; // Define your idle animation state name
     private string currentAnimationState;
+
     public override void Enter()
     {
-    }
-
-    public PatrolState()
-    {
-        GameObject enemy = GameObject.FindGameObjectWithTag("AiBody"); 
-        if (enemy != null)
-        {
-            animator = enemy.GetComponent<Animator>();
-        }
+        // Access the Animator component from the enemy object
+        animator = enemy.GetComponent<Animator>();
     }
 
     public override void Perform()
@@ -34,8 +27,10 @@ public class PatrolState : BaseState
             stateMachine.ChangeState(new AttackState());
         }
     }
+
     public override void Exit()
     {
+        // Any cleanup when the state exits
     }
 
     public void PatrolCycle()
@@ -75,12 +70,11 @@ public class PatrolState : BaseState
         if (currentAnimationState == newState) return;
 
         animator.CrossFadeInFixedTime(newState, 0.2f);
-        currentAnimationState = newState;
+        currentAnimationState = newState; // Update current state after the animation is triggered
     }
 
     private void ResetAnimationState()
     {
         currentAnimationState = ""; // Reset to an empty or default state
     }
-
 }

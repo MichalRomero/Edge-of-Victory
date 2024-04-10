@@ -14,33 +14,20 @@ public class AttackState : BaseState
     private float delayAttackTimer = 0f;
     private const float delayAttackTime = 0.4f; // Delay time in seconds
 
-
-
-
-    // Update is called once per frame
-    void Update()
-    {
-        Perform();
-    }
-    public override void Enter()
-    {
-        attackTimer = 0; // Reset attack timer on entering the state
-    }
-
-    public override void Exit()
-    {
-
-    }
-
-
-
     private PlayerHP playerHP;
 
     private float attackCooldown = 1f; // Cooldown time for attacks
-    private float attackTimer = 0;       // Timer to track attack cooldown
+    private float attackTimer = 0; // Timer to track attack cooldown
 
-    public AttackState()
+    public const string EnemyWalk = "EnemyWalk"; // Define your walking animation state name
+    public const string EnemyAttack = "EnemyAttack";
+    private string currentAnimationState;
+
+    public override void Enter()
     {
+        // Reset attack timer on entering the state
+        attackTimer = 0;
+
         // Find the player GameObject and get the PlayerHP component
         GameObject player = GameObject.FindGameObjectWithTag("Player"); // Use the tag assigned to your player GameObject
         if (player != null)
@@ -48,11 +35,8 @@ public class AttackState : BaseState
             playerHP = player.GetComponent<PlayerHP>();
         }
 
-        GameObject enemy = GameObject.FindGameObjectWithTag("AiBody"); // Use appropriate tag
-        if (enemy != null)
-        {
-            animator = enemy.GetComponent<Animator>();
-        }
+        // Access the Animator component from the enemy object
+        animator = enemy.GetComponent<Animator>();
     }
 
     public override void Perform()
@@ -100,18 +84,16 @@ public class AttackState : BaseState
         else
         {
             ResetAnimationState(); // Return to idle or searching animation
-                                   // Changes to search state
+            // Changes to search state
             stateMachine.ChangeState(new SearchState());
         }
     }
-
 
     private void Attack()
     {
         ChangeAnimationState(EnemyAttack);
         isAttackDelayed = true;
         delayAttackTimer = 0f;
-
     }
 
     private void DelayedAttack()
@@ -124,22 +106,11 @@ public class AttackState : BaseState
         ResetAnimationState();
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    public const string EnemyWalk = "EnemyWalk"; // Define your walking animation state name
-    public const string EnemyAttack = "EnemyAttack";
-    string currentAnimationState;
     public void ChangeAnimationState(string newState)
     {
         Debug.Log("Changing animation state to: " + newState);
-        // STOP THE SAME ANIMATION FROM INTERRUPTING WITH ITSELF //
         if (currentAnimationState == newState) return;
 
-        // PLAY THE ANIMATION //
         animator.CrossFadeInFixedTime(newState, 0.2f);
         currentAnimationState = newState; // Update current state after the animation is triggered
     }
@@ -149,4 +120,8 @@ public class AttackState : BaseState
         currentAnimationState = ""; // Reset to an empty or default state
     }
 
+    public override void Exit()
+    {
+        // Any cleanup when the state exits
+    }
 }

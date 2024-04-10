@@ -113,9 +113,41 @@ public class Enemy : MonoBehaviour
         currentHealth -= amount;
         Debug.Log("Taking damage");
 
+        Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
+        float dotProduct = Vector3.Dot(directionToPlayer, transform.forward);
+
+        if (dotProduct < 0) // Player is behind
+        {
+            // Start coroutine to smoothly rotate towards the player
+            StartCoroutine(RotateTowardsPlayer(directionToPlayer));
+        }
+
         if (currentHealth <= 0)
-        { Death(); }
+        {
+            Death();
+        }
     }
+
+    IEnumerator RotateTowardsPlayer(Vector3 directionToPlayer)
+    {
+        float duration = 0.2f; // Duration of the rotation, adjust as needed
+        float time = 0;
+
+        Quaternion startRotation = transform.rotation;
+        Quaternion endRotation = Quaternion.LookRotation(directionToPlayer);
+
+        while (time < duration)
+        {
+            time += Time.deltaTime;
+            transform.rotation = Quaternion.Slerp(startRotation, endRotation, time / duration);
+            yield return null;
+        }
+
+        // Change to attack state after rotation is completed
+        stateMachine.ChangeState(new AttackState());
+    }
+
+
 
     void Death()
     {
