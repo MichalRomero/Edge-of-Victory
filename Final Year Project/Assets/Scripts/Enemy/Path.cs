@@ -7,16 +7,15 @@ public class Path : MonoBehaviour
     public List<Transform> waypoints;
 
     // Given options for the path.
-    public bool alwaysDrawPath = true; 
+    public bool alwaysDrawPath = true;
     public bool drawAsLoop;
     public bool drawNumbers;
     public Color debugColour = Color.white; // Draws a visual line.
 
-    // Called when gizmos are drawn in the scence view.
+    // Called when gizmos are drawn in the scene view.
     private void OnDrawGizmos()
     {
-        // Checks if path should be drawn always or when the gameobject is selected.
-        if (alwaysDrawPath || UnityEditor.Selection.activeGameObject == gameObject)
+        if (alwaysDrawPath)
         {
             DrawPath();
         }
@@ -27,12 +26,11 @@ public class Path : MonoBehaviour
     {
         for (int i = 0; i < waypoints.Count; i++)
         {
-            GUIStyle labelStyle = new GUIStyle();
-            labelStyle.fontSize = 30;
-            labelStyle.normal.textColor = debugColour;
-
             if (drawNumbers)
-                UnityEditor.Handles.Label(waypoints[i].position, i.ToString(), labelStyle);
+            {
+                // Here you could implement an alternative way to display the numbers
+                // For now, this feature is removed as it requires the Unity Editor.
+            }
 
             // Draw Lines Between Points.
             if (i >= 1)
@@ -47,4 +45,3 @@ public class Path : MonoBehaviour
         }
     }
 }
-
