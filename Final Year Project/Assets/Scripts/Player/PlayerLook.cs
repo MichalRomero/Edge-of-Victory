@@ -5,8 +5,8 @@ public class PlayerLook : MonoBehaviour
     public Camera cam; // Reference to the camera attached to the player.
     private float xRotation = 0f;
 
-    public float xSens = 30f; // Sensitivity for horizontal camera movement.
-    public float ySens = 30f; // Sensitivity for vertical camera movement.
+    public float xSens = 20f; // Sensitivity for horizontal camera movement.
+    public float ySens = 20f; // Sensitivity for vertical camera movement.
 
     public void ProcessLook(Vector2 input)
     {

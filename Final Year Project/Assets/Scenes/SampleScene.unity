@@ -4006,8 +4006,8 @@ MonoBehaviour:
   viewDistance: 20
   fov: 85
   eyeHeight: 2
-  player1: {fileID: 0}
   maxHealth: 100
+  player1: {fileID: 0}
   sightRange: 20
   attackRange: 2
   pAttackInRange: 0
@@ -6219,8 +6219,8 @@ MonoBehaviour:
   viewDistance: 20
   fov: 85
   eyeHeight: 2
-  player1: {fileID: 0}
   maxHealth: 100
+  player1: {fileID: 0}
   sightRange: 20
   attackRange: 2
   pAttackInRange: 0
@@ -10031,8 +10031,8 @@ MonoBehaviour:
   viewDistance: 20
   fov: 85
   eyeHeight: 2
-  player1: {fileID: 0}
   maxHealth: 100
+  player1: {fileID: 0}
   sightRange: 20
   attackRange: 2
   pAttackInRange: 0
@@ -12648,8 +12648,8 @@ MonoBehaviour:
   viewDistance: 20
   fov: 85
   eyeHeight: 2
-  player1: {fileID: 0}
   maxHealth: 100
+  player1: {fileID: 0}
   sightRange: 20
   attackRange: 2
   pAttackInRange: 0
@@ -13371,8 +13371,8 @@ MonoBehaviour:
   viewDistance: 20
   fov: 85
   eyeHeight: 0.6
-  player1: {fileID: 0}
   maxHealth: 100
+  player1: {fileID: 0}
   sightRange: 20
   attackRange: 3
   pAttackInRange: 0
@@ -16043,8 +16043,8 @@ MonoBehaviour:
   viewDistance: 20
   fov: 85
   eyeHeight: 2
-  player1: {fileID: 0}
   maxHealth: 100
+  player1: {fileID: 0}
   sightRange: 20
   attackRange: 2
   pAttackInRange: 0
@@ -18236,8 +18236,8 @@ MonoBehaviour:
   viewDistance: 20
   fov: 85
   eyeHeight: 2
-  player1: {fileID: 0}
   maxHealth: 100
+  player1: {fileID: 0}
   sightRange: 20
   attackRange: 2
   pAttackInRange: 0
@@ -22319,8 +22319,8 @@ MonoBehaviour:
   viewDistance: 20
   fov: 85
   eyeHeight: 2
-  player1: {fileID: 0}
   maxHealth: 100
+  player1: {fileID: 0}
   sightRange: 20
   attackRange: 2
   pAttackInRange: 0
@@ -30570,8 +30570,8 @@ MonoBehaviour:
   viewDistance: 20
   fov: 85
   eyeHeight: 2
-  player1: {fileID: 0}
   maxHealth: 100
+  player1: {fileID: 0}
   sightRange: 20
   attackRange: 2
   pAttackInRange: 0
@@ -33401,6 +33401,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f60951484351c646994f16f359d6f9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cam: {fileID: 486827169}
   attackDistance: 3
   attackDelay: 0.4
   attackSpeed: 1
@@ -33408,10 +33409,6 @@ MonoBehaviour:
   attackLayer:
     serializedVersion: 2
     m_Bits: 128
-  hitEffect: {fileID: 0}
-  swordSwing: {fileID: 0}
-  hitSound: {fileID: 0}
-  cam: {fileID: 486827169}
 --- !u!114 &2115848268
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33635,7 +33632,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2012290878062383550, guid: b6b192d3a49d87d41a9e7a1eb143f817, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -13.6
+      value: 16.41
       objectReference: {fileID: 0}
     - target: {fileID: 2012290878062383550, guid: b6b192d3a49d87d41a9e7a1eb143f817, type: 3}
       propertyPath: m_LocalPosition.y
@@ -33643,7 +33640,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2012290878062383550, guid: b6b192d3a49d87d41a9e7a1eb143f817, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5.1
+      value: -71.51
       objectReference: {fileID: 0}
     - target: {fileID: 2012290878062383550, guid: b6b192d3a49d87d41a9e7a1eb143f817, type: 3}
       propertyPath: m_LocalRotation.w

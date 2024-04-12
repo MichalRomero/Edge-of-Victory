@@ -8,13 +8,12 @@ public class PatrolState : BaseState
     public float waitTimer;
 
     private Animator animator; // Reference to the Animator component
-    public const string EnemyWalk = "EnemyWalk"; // Define your walking animation state name
-    public const string EnemyIdle = "EnemyIdle"; // Define your idle animation state name
+    public const string EnemyWalk = "EnemyWalk"; 
+    public const string EnemyIdle = "EnemyIdle"; 
     private string currentAnimationState;
 
     public override void Enter()
     {
-        // Access the Animator component from the enemy object
         animator = enemy.GetComponent<Animator>();
     }
 
@@ -30,7 +29,6 @@ public class PatrolState : BaseState
 
     public override void Exit()
     {
-        // Any cleanup when the state exits
     }
 
     public void PatrolCycle()
@@ -75,6 +73,6 @@ public class PatrolState : BaseState
 
     private void ResetAnimationState()
     {
-        currentAnimationState = ""; // Reset to an empty or default state
+        currentAnimationState = ""; // Reset to default state
     }
 }

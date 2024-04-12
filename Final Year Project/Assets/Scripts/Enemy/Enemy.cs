@@ -16,6 +16,9 @@ public class Enemy : MonoBehaviour
     public float viewDistance = 20f;
     public float fov = 85f;
     public float eyeHeight;
+
+    int currentHealth;
+    public int maxHealth;
     public GameObject Player { get => player; }
     private Vector3 lastKnownPos;
     // Having the getter allows access the private var of lastKnownPos, having the setter allows asigning new value to it.
@@ -24,8 +27,10 @@ public class Enemy : MonoBehaviour
     //Used in Attack state
     public Transform player1;
 
-    
-
+    //Used for attack state
+    public float sightRange, attackRange;
+    public bool pAttackInRange;
+    public LayerMask whatIsGround, whatIsPlayer;
 
     // Start is called before the first frame update
     void Start()
@@ -50,31 +55,16 @@ public class Enemy : MonoBehaviour
         player1 = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
-    int currentHealth;
-    public int maxHealth;
-
     void Awake()
     {
         currentHealth = maxHealth;
     }
 
-
-
-    //Used for attack state
-
-    //public Vector3 plp ;
-    public float sightRange, attackRange;
-    public bool pAttackInRange;
-    public LayerMask whatIsGround, whatIsPlayer;
     public bool playerInAttackRange()
     {
         pAttackInRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
         return pAttackInRange;
     }
-
-
-
-
 
     // Check if player is within range and within FOV of enemy
     public bool PlayerVisable()
@@ -146,8 +136,6 @@ public class Enemy : MonoBehaviour
         // Change to attack state after rotation is completed
         stateMachine.ChangeState(new AttackState());
     }
-
-
 
     void Death()
     {

@@ -12,24 +12,49 @@ public class PlayerMotor : MonoBehaviour
 {
     private CharacterController controller;
     private Vector3 playerVelocity;
+    public Camera cam;
 
     private bool isGrounded;
-
-    private float baseSpeed = 5f; // Base walking speed
-    private float crouchSpeed = 3f; // Reduced speed when crouching 
-    private float sprintSpeed = 8f; // Increased speed when sprinting
-
-    private float gravity = -20f; // Gravitational force
-
-    private float jumpHeight = 2f; // Height the player can jump
     private bool lerpCrouch; // Flag for crouch transition
-    private bool crouching; // Is player crouching?
-    private bool sprinting; // Is player sprinting?
+    private bool crouching; 
+    private bool sprinting; 
     private float crouchTimer; // Timer for crouch transition
 
-    
+    // Movement speeds
+    private float baseSpeed = 5f; 
+    private float crouchSpeed = 3f;  
+    private float sprintSpeed = 8f; 
 
+    // jumping parameters
+    private float gravity = -20f; 
+    private float jumpHeight = 2f; 
 
+    // Blocking parameters
+    private bool isBlocking = false; // Flag to track if the player is currently blocking
+    private float blockDuration = 0.5f; // Duration of blocking 
+    public bool IsBlocking => isBlocking; // Property to provide read-only access to isBlocking
+
+    // Attack parameters
+    public float attackDistance = 3f;
+    public float attackDelay = 0.4f;
+    public float attackSpeed = 1f;
+    public int attackDamage = 10;
+    public LayerMask attackLayer;
+
+    bool attacking = false;
+    bool readyToAttack = true;
+    int attackCount;
+
+    //Animation
+    Animator animator;
+
+    public const string Blocking = "Blocking";
+    public const string IDLE = "Idle";
+    public const string WALK = "Walk";
+    public const string ATTACK1 = "Attack 1";
+    public const string ATTACK2 = "Attack 2";
+
+    string currentAnimationState;
 
     void Start()
     {
@@ -39,16 +64,10 @@ public class PlayerMotor : MonoBehaviour
 
     }
 
-
     void Update()
     {
         isGrounded = controller.isGrounded;
         HandleCrouch();
-
-
-        //if (input.Attack.IsPressed())
-        //{ Attack(); }
-
         SetAnimations();
     }
 
@@ -56,6 +75,8 @@ public class PlayerMotor : MonoBehaviour
     {
         // Adjust speed based on player state
         float currentSpeed = sprinting ? sprintSpeed : (crouching ? crouchSpeed : baseSpeed);
+
+        // Converted 2D to 3D movement direction and scaled by current speed
         Vector3 moveDirection = transform.TransformDirection(new Vector3(input.x, 0, input.y)) * currentSpeed;
 
         // Handle gravity
@@ -80,21 +101,22 @@ public class PlayerMotor : MonoBehaviour
         }
     }
 
+    // Manages the crouch transition
     private void HandleCrouch()
     {
-        if (!lerpCrouch) return;
+        if (!lerpCrouch) return; // Exit if not interpolating.
 
         crouchTimer += Time.deltaTime;
-        float targetHeight = crouching ? 1f : 2f;
-        controller.height = Mathf.Lerp(controller.height, targetHeight, crouchTimer);
+        float targetHeight = crouching ? 1f : 2f; // Set target height based on crouching state.
+        controller.height = Mathf.Lerp(controller.height, targetHeight, crouchTimer); // Smoothly interpolate height.
 
+        // Reset lerp and timer when the transition completes.
         if (crouchTimer >= 1)
         {
             lerpCrouch = false;
             crouchTimer = 0f;
         }
     }
-
     public void Crouch()
     {
         // If sprinting, switch to crouch
@@ -126,32 +148,16 @@ public class PlayerMotor : MonoBehaviour
         }
     }
 
-    public float attackDistance = 3f;
-    public float attackDelay = 0.4f;
-    public float attackSpeed = 1f;
-    public int attackDamage = 10;
-    public LayerMask attackLayer;
-
-    public GameObject hitEffect;
-    public AudioClip swordSwing;
-    public AudioClip hitSound;
-
-    bool attacking = false;
-    bool readyToAttack = true;
-    int attackCount;
-
-    public Camera cam;
-
     public void Attack()
     {
         Debug.Log("attacked");
-        if (!readyToAttack || attacking) return;
+        if (!readyToAttack || attacking) return; 
 
         readyToAttack = false;
         attacking = true;
 
-        Invoke(nameof(ResetAttack), attackSpeed);
-        Invoke(nameof(AttackRaycast), attackDelay);
+        Invoke(nameof(ResetAttack), attackSpeed); // Schedules attack reset based on attack speed
+        Invoke(nameof(AttackRaycast), attackDelay); // Schedules the attack's hit detection after a delay
 
 
         if (attackCount == 0)
@@ -171,7 +177,6 @@ public class PlayerMotor : MonoBehaviour
     {
         attacking = false;
         readyToAttack = true;
-        //Debug.Log("resetAttack");
     }
 
     void AttackRaycast()
@@ -180,42 +185,24 @@ public class PlayerMotor : MonoBehaviour
         {
             HitTarget(hit.point);
 
+            // Check if the hit object has an Enemy component and deal damage
             if (hit.transform.TryGetComponent<Enemy>(out Enemy T))
             { T.TakeDamage(attackDamage); }
             Debug.Log("raycast");
         }
     }
 
-
     void HitTarget(Vector3 pos)
     {
-
         Debug.Log("hit target");
     }
-
-
-
-
-
-
-
-    Animator animator;
-
-    public const string Blocking = "Blocking";
-    public const string IDLE = "Idle";
-    public const string WALK = "Walk";
-    public const string ATTACK1 = "Attack 1";
-    public const string ATTACK2 = "Attack 2";
-
-    string currentAnimationState;
 
     public void ChangeAnimationState(string newState)
     {
         Debug.Log("Changing animation state to: " + newState);
-        // STOP THE SAME ANIMATION FROM INTERRUPTING WITH ITSELF //
+        // Stops animation for iterrupting itslef
         if (currentAnimationState == newState) return;
 
-        // PLAY THE ANIMATION //
         currentAnimationState = newState;
         animator.CrossFadeInFixedTime(currentAnimationState, 0.2f);
     }
@@ -239,13 +226,6 @@ public class PlayerMotor : MonoBehaviour
         }
     }
 
-
-
-    private bool isBlocking = false; // Flag to track if the player is currently blocking
-    private float blockDuration = 0.5f; // Duration of blocking in seconds
-
-    public bool IsBlocking => isBlocking; // Property to provide read-only access to isBlocking
-
     public void Block()
     {
         if (!isBlocking)
@@ -254,7 +234,7 @@ public class PlayerMotor : MonoBehaviour
             isBlocking = true;
 
             // Trigger block animation if available
-            ChangeAnimationState(Blocking); // Assuming you have a block animation
+            ChangeAnimationState(Blocking); 
 
             // Invoke method to stop blocking after blockDuration
             Invoke(nameof(StopBlocking), blockDuration);
@@ -266,7 +246,7 @@ public class PlayerMotor : MonoBehaviour
         // Stop blocking
         isBlocking = false;
 
-        // If you have a block animation, return to idle or previous animation
-        ChangeAnimationState(IDLE); // Assuming you have an idle animation
+        // If you have a block animation, return to idle
+        ChangeAnimationState(IDLE); 
     }
 }

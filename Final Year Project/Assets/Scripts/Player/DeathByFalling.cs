@@ -3,11 +3,11 @@ using UnityEngine.SceneManagement;
 
 public class DeathByFalling : MonoBehaviour
 {
-    public float deathYValue = -10f; // Set this to the Y value at which the player should die
+    public float deathYValue = -10f; // death value
 
     void Update()
     {
-        // Check if the player's Y position is less than the death value
+        // Checks if the player's Y position is less than the death value
         if (transform.position.y < deathYValue)
         {
             Die();
@@ -18,6 +18,6 @@ public class DeathByFalling : MonoBehaviour
     {
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1); // Loads the next scene (death screen)
     }
 }

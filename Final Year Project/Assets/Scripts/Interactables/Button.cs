@@ -10,8 +10,10 @@ public class Button : Interactable
     [SerializeField]
     private List<GameObject> requiredDestroyedObjects;
 
+    // Triggered when the button is interacted
     protected override void Interact()
     {
+        // Check if all bots within the level are destroyed
         if (AreRequiredObjectsDestroyed())
         {
             doorOpen = !doorOpen;
@@ -23,6 +25,7 @@ public class Button : Interactable
         }
     }
 
+    // Checks if all objects in requiredDestroyedObjects list are null, meaning they have been destroyed
     private bool AreRequiredObjectsDestroyed()
     {
         foreach (GameObject obj in requiredDestroyedObjects)

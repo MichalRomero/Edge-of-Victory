@@ -19,7 +19,7 @@ public class AttackState : BaseState
     private float attackCooldown = 1f; // Cooldown time for attacks
     private float attackTimer = 0; // Timer to track attack cooldown
 
-    public const string EnemyWalk = "EnemyWalk"; // Define your walking animation state name
+    public const string EnemyWalk = "EnemyWalk"; 
     public const string EnemyAttack = "EnemyAttack";
     private string currentAnimationState;
 
@@ -29,13 +29,12 @@ public class AttackState : BaseState
         attackTimer = 0;
 
         // Find the player GameObject and get the PlayerHP component
-        GameObject player = GameObject.FindGameObjectWithTag("Player"); // Use the tag assigned to your player GameObject
+        GameObject player = GameObject.FindGameObjectWithTag("Player"); 
         if (player != null)
         {
             playerHP = player.GetComponent<PlayerHP>();
         }
 
-        // Access the Animator component from the enemy object
         animator = enemy.GetComponent<Animator>();
     }
 
@@ -57,7 +56,7 @@ public class AttackState : BaseState
         // Checks if the enemy can see the player but is not within attacking range
         if (enemy.PlayerVisable() && !enemy.playerInAttackRange())
         {
-            if (!isAttackDelayed) // Add this check
+            if (!isAttackDelayed) 
             {
                 enemy.Agent.SetDestination(enemy.player1.position);
                 enemy.LastKnownPos = enemy.Player.transform.position;
@@ -84,7 +83,6 @@ public class AttackState : BaseState
         else
         {
             ResetAnimationState(); // Return to idle or searching animation
-            // Changes to search state
             stateMachine.ChangeState(new SearchState());
         }
     }
@@ -122,6 +120,5 @@ public class AttackState : BaseState
 
     public override void Exit()
     {
-        // Any cleanup when the state exits
     }
 }

@@ -7,7 +7,7 @@ public class Next1 : MonoBehaviour
 {
     public void Next()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1); //Loads next scene
     }
 
 }

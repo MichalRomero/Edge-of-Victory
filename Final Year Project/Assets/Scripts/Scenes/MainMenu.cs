@@ -8,11 +8,11 @@ public class MainMenu : MonoBehaviour
 {
     public void PlayGame()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(1); // Loads the introduction story
     }
 
     public void QuitGame()
     {
-        Application.Quit();
+        Application.Quit(); // Quits game
     }
 }

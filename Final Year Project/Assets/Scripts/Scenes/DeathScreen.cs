@@ -7,11 +7,11 @@ public class DeathScreen : MonoBehaviour
 {
     public void RestartGame()
     {
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene(2); // Loads the game scene
     }
 
     public void MainMenu()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(0); // Loads the main menu scene
     }
 }

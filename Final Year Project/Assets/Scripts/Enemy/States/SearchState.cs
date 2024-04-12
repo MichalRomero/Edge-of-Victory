@@ -8,16 +8,14 @@ public class SearchState : BaseState
     private float moveTimer;
 
     private Animator animator; // Reference to the Animator component
-    public const string EnemyWalk = "EnemyWalk"; // Define your walking animation state name
-    public const string EnemyIdle = "EnemyIdle"; // Define your idle animation state name
+    public const string EnemyWalk = "EnemyWalk"; 
+    public const string EnemyIdle = "EnemyIdle"; 
     private string currentAnimationState;
 
     public override void Enter()
     {
         enemy.Agent.SetDestination(enemy.LastKnownPos);
         ChangeAnimationState(EnemyWalk);
-
-        // Access the Animator component from the enemy object
         animator = enemy.GetComponent<Animator>();
     }
 
@@ -56,7 +54,6 @@ public class SearchState : BaseState
     {
         if (animator == null)
         {
-            //Debug.LogError("Animator not found on the enemy.");
             return;
         }
 
@@ -70,11 +67,10 @@ public class SearchState : BaseState
 
     private void ResetAnimationState()
     {
-        currentAnimationState = ""; // Reset to an empty or default state
+        currentAnimationState = ""; // Reset to  default state
     }
 
     public override void Exit()
     {
-        // Any cleanup when the state exits
     }
 }
