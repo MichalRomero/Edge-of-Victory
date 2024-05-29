@@ -5,8 +5,13 @@ public class PlayerLook : MonoBehaviour
     public Camera cam; // Reference to the camera attached to the player.
     private float xRotation = 0f;
 
-    public float xSens = 20f; // Sensitivity for horizontal camera movement.
-    public float ySens = 20f; // Sensitivity for vertical camera movement.
+    public float sensitivity = 20f; // Sensitivity for camera movement.
+
+    private void Start()
+    {
+        // Load saved sensitivity value
+        sensitivity = PlayerPrefs.GetFloat("sensitivity", sensitivity);
+    }
 
     public void ProcessLook(Vector2 input)
     {
@@ -14,7 +19,7 @@ public class PlayerLook : MonoBehaviour
         float mouseY = input.y;
 
         // Calculate the rotation for looking up and down.
-        xRotation -= (mouseY * Time.deltaTime) * ySens;
+        xRotation -= (mouseY * Time.deltaTime) * sensitivity;
         xRotation = Mathf.Clamp(xRotation, -80f, 80f); // Clamp vertical rotation to avoid over-rotation.
 
         // Create a quaternion for the vertical rotation.
@@ -24,8 +29,15 @@ public class PlayerLook : MonoBehaviour
         cam.transform.localRotation = verticalRotation;
 
         // Rotate the player to look left and right.
-        transform.Rotate(Vector3.up * (mouseX * Time.deltaTime) * xSens);
+        transform.Rotate(Vector3.up * (mouseX * Time.deltaTime) * sensitivity);
+    }
+
+    public void SetSensitivity(float newSensitivity)
+    {
+        sensitivity = newSensitivity;
+
+        // Save sensitivity setting
+        PlayerPrefs.SetFloat("sensitivity", sensitivity);
+        PlayerPrefs.Save();
     }
 }
-
-

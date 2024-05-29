@@ -1,12 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using UnityEngine.Windows;
-
 
 public class PlayerMotor : MonoBehaviour
 {
@@ -16,23 +12,32 @@ public class PlayerMotor : MonoBehaviour
 
     private bool isGrounded;
     private bool lerpCrouch; // Flag for crouch transition
-    private bool crouching; 
-    private bool sprinting; 
+    private bool crouching;
+    private bool sprinting;
     private float crouchTimer; // Timer for crouch transition
 
     // Movement speeds
-    private float baseSpeed = 5f; 
-    private float crouchSpeed = 3f;  
-    private float sprintSpeed = 8f; 
+    private float baseSpeed = 5f;
+    private float crouchSpeed = 3f;
+    private float sprintSpeed = 8f;
 
     // jumping parameters
-    private float gravity = -20f; 
-    private float jumpHeight = 2f; 
+    private float gravity = -20f;
+    private float jumpHeight = 2f;
 
     // Blocking parameters
     private bool isBlocking = false; // Flag to track if the player is currently blocking
     private float blockDuration = 0.5f; // Duration of blocking 
     public bool IsBlocking => isBlocking; // Property to provide read-only access to isBlocking
+
+    // Stamina parameters
+    public float maxStamina = 100f;
+    private float stamina;
+    private float staminaRegenRate = 10f;
+    private float staminaDrainRate = 20f;
+    private bool canSprint = true;
+
+    public float Stamina => stamina; // Public property to access stamina
 
     // Attack parameters
     public float attackDistance = 3f;
@@ -58,10 +63,10 @@ public class PlayerMotor : MonoBehaviour
 
     void Start()
     {
-        controller = GetComponent<CharacterController>(); 
+        controller = GetComponent<CharacterController>();
         cam = GetComponent<PlayerLook>().cam;
         animator = GetComponentInChildren<Animator>(); ;
-
+        stamina = maxStamina;
     }
 
     void Update()
@@ -69,12 +74,13 @@ public class PlayerMotor : MonoBehaviour
         isGrounded = controller.isGrounded;
         HandleCrouch();
         SetAnimations();
+        HandleStamina();
     }
 
     public void ProcessMove(Vector2 input)
     {
         // Adjust speed based on player state
-        float currentSpeed = sprinting ? sprintSpeed : (crouching ? crouchSpeed : baseSpeed);
+        float currentSpeed = sprinting && canSprint ? sprintSpeed : (crouching ? crouchSpeed : baseSpeed);
 
         // Converted 2D to 3D movement direction and scaled by current speed
         Vector3 moveDirection = transform.TransformDirection(new Vector3(input.x, 0, input.y)) * currentSpeed;
@@ -117,6 +123,7 @@ public class PlayerMotor : MonoBehaviour
             crouchTimer = 0f;
         }
     }
+
     public void Crouch()
     {
         // If sprinting, switch to crouch
@@ -148,17 +155,50 @@ public class PlayerMotor : MonoBehaviour
         }
     }
 
+    private void HandleStamina()
+    {
+        bool isMoving = controller.velocity.magnitude > 0.1f; // Check if player is moving
+
+        if (sprinting && canSprint && isMoving)
+        {
+            stamina -= staminaDrainRate * Time.deltaTime;
+            if (stamina <= 0)
+            {
+                stamina = 0;
+                canSprint = false;
+                sprinting = false; // Automatically stop sprinting if stamina is depleted
+            }
+        }
+        else
+        {
+            stamina += staminaRegenRate * Time.deltaTime;
+            if (stamina > maxStamina)
+            {
+                stamina = maxStamina;
+            }
+            if (stamina > 10) // Allow sprinting again when stamina is sufficiently regenerated
+            {
+                canSprint = true;
+            }
+
+            // Stop sprinting if the player is not moving
+            if (!isMoving)
+            {
+                sprinting = false;
+            }
+        }
+    }
+
     public void Attack()
     {
         Debug.Log("attacked");
-        if (!readyToAttack || attacking) return; 
+        if (!readyToAttack || attacking) return;
 
         readyToAttack = false;
         attacking = true;
 
         Invoke(nameof(ResetAttack), attackSpeed); // Schedules attack reset based on attack speed
         Invoke(nameof(AttackRaycast), attackDelay); // Schedules the attack's hit detection after a delay
-
 
         if (attackCount == 0)
         {
@@ -170,7 +210,6 @@ public class PlayerMotor : MonoBehaviour
             ChangeAnimationState(ATTACK2);
             attackCount = 0;
         }
-  
     }
 
     void ResetAttack()
@@ -234,7 +273,7 @@ public class PlayerMotor : MonoBehaviour
             isBlocking = true;
 
             // Trigger block animation if available
-            ChangeAnimationState(Blocking); 
+            ChangeAnimationState(Blocking);
 
             // Invoke method to stop blocking after blockDuration
             Invoke(nameof(StopBlocking), blockDuration);
@@ -247,6 +286,6 @@ public class PlayerMotor : MonoBehaviour
         isBlocking = false;
 
         // If you have a block animation, return to idle
-        ChangeAnimationState(IDLE); 
+        ChangeAnimationState(IDLE);
     }
 }
